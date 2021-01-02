@@ -23,7 +23,7 @@ The Quantity class has the following signature:
 template <auto Units, typename T = float>
 class Quantity;
 ```
-Units - represents the stored quantity's units.
+Units - represents the stored quantity's units.  
 T - the number type used by the Quantity.
 
 Once a quantity variable has been declared, it can mostly be used just like any

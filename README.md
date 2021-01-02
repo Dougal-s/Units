@@ -61,10 +61,10 @@ int main() {
 The library defines all classes, functions and variables inside the `units`
 namespace.
 
-**units::abbreviations**
+**units::abbreviations**  
 ``units::abbreviations`` contains abbreviated versions of every predefined unit.
 
-**units::units_literals**: _incomplete_
+**units::units_literals**: _incomplete_  
 ``units::units_literals`` contains literal operators for every predefined unit.
 
 

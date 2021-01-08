@@ -102,6 +102,13 @@ namespace units {
 	private:
 		T value{};
 	};
+	
+	// Concepts
+	template <class T>
+	concept CQuantity = requires (T quantity){
+		{ Quantity{quantity} } -> std::derived_from<T>;
+	};
+	
 
 	// Addition/Subtraction
 	template <typename T1, auto units1, typename T2, auto units2>
@@ -188,7 +195,8 @@ namespace units {
 	// Multiplication/Division with dimensionless values
 	template <typename T, auto units, typename U>
 		requires CUnit<decltype(units)> &&
-		requires(T t, U&& u) {{t * u};}
+		requires(T t, U&& u) {{t * u};} &&
+		(!CUnit<U>)
 	constexpr auto operator*(
 		const Quantity<units, T>& lhs, U rhs
 	) -> Quantity<units, decltype(T{}*U{})> {
@@ -197,7 +205,8 @@ namespace units {
 
 	template <typename T, auto units, typename U>
 		requires CUnit<decltype(units)> &&
-		requires(T t, U&& u) {{t * u};}
+		requires(T t, U&& u) {{t * u};} &&
+		(!CUnit<U>)
 	constexpr auto operator*(
 		U lhs, const Quantity<units, T>& rhs
 	) -> Quantity<units, decltype(T{}*U{})> {
@@ -206,7 +215,8 @@ namespace units {
 
 	template <typename T, auto units, typename U>
 		requires CUnit<decltype(units)> &&
-		requires(T t, U u) {{t / u};}
+		requires(T t, U u) {{t / u};} &&
+		(!CUnit<U>)
 	constexpr auto operator/(
 		const Quantity<units, T>& lhs, U rhs
 	) -> Quantity<units, decltype(T{}/U{})> {
@@ -215,7 +225,8 @@ namespace units {
 
 	template <typename T, auto units, typename U>
 		requires CUnit<decltype(units)> &&
-		requires(T t, U u) {{t / u};}
+		requires(T t, U u) {{t / u};} &&
+		(!CUnit<U>)
 	constexpr auto operator/(
 		U lhs, const Quantity<units, T>& rhs
 	) -> Quantity<units, decltype(T{}/U{})> {
@@ -242,7 +253,47 @@ namespace units {
 	constexpr auto operator>(const Quantity<units1, T1>& lhs, const Quantity<units2, T2>& rhs) {
 		return lhs.template as<units1>() > rhs.template as<units1>();
 	}
-
+	
+	// Operations with unit types
+	
+	// Multiplication
+	template <typename T, auto units, CUnit UnitType>
+	constexpr auto operator*(UnitType, const Quantity<units, T>& val) {
+		return Quantity<units*UnitType{}, T>{val.get()};
+	}
+	template <typename T, auto units, CUnit UnitType>
+	constexpr auto operator*(const Quantity<units, T>& val, UnitType) {
+		return Quantity<units*UnitType{}, T>{val.get()};
+	}
+	
+	template <typename T, CUnit UnitType>
+	constexpr auto operator*(UnitType units, const T& val) {
+		return Quantity<units, T>{val};
+	}
+	template <typename T, CUnit UnitType> requires (!CQuantity<T>)
+	constexpr auto operator*(const T& val, UnitType units) {
+		return Quantity<units, T>{val};
+	}
+	
+	// Division
+	
+	template <typename T, auto units, CUnit UnitType>
+	constexpr auto operator/(UnitType, const Quantity<units, T>& val) {
+		return Quantity<UnitType{}/units, T>{T{1}/val.get()};
+	}
+	template <typename T, auto units, CUnit UnitType>
+	constexpr auto operator/(const Quantity<units, T>& val, UnitType) {
+		return Quantity<units/UnitType{}, T>{val.get()};
+	}
+	
+	template <typename T, CUnit UnitType>
+	constexpr auto operator/(UnitType, const T& val) {
+		return Quantity<UnitType{}, T>{T{1}/val};
+	}
+	template <typename T, CUnit UnitType>
+	constexpr auto operator/(const T& val, UnitType units) {
+		return Quantity<std::ratio<1>{}/units, T>{val};
+	}
 
 
 	namespace unit_literals {

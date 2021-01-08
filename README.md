@@ -43,7 +43,7 @@ using namespace units::unit_literals;
 constexpr Quantity<N*m*m/(kg*kg), double> G = 6.67408e-11;
 
 int main() {
-    auto x = 5519.2_km;
+    auto x = 5519.2 * km;
 	auto y = 3186.5_km;
     auto r = std::sqrt(x*x + y*y);
 

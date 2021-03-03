@@ -43,17 +43,17 @@ using namespace units::unit_literals;
 constexpr Quantity<N*m*m/(kg*kg), double> G = 6.67408e-11;
 
 int main() {
-    auto x = 5519.2 * km;
+	auto x = 5519.2 * km;
 	auto y = 3186.5_km;
-    auto r = std::sqrt(x*x + y*y);
+	auto r = std::sqrt(x*x + y*y);
 
-    auto mass = 5.97e24_kg;
+	auto mass = 5.97e24_kg;
 
-    constexpr auto acc = m/(s*s);
-    Quantity<acc, double> potential = G * mass/(r*r);
+	constexpr auto acc = m/(s*s);
+	Quantity<acc, double> potential = G * mass/(r*r);
 
-    // prints 9.81015
-    std::cout << potential.as<acc>() << std::endl;
+	// prints 9.81015
+	std::cout << potential.as<acc>() << std::endl;
 }
 ```
 

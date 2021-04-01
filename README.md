@@ -40,10 +40,10 @@ using namespace units;
 using namespace units::abbreviations;
 using namespace units::unit_literals;
 
-constexpr Quantity<N*m*m/(kg*kg), double> G = 6.67408e-11;
+constexpr Quantity<N*m*m/(kg*kg), float> G = 6.67408e-11f;
 
 int main() {
-	auto x = 5519.2 * km;
+	auto x = 5519.2f * km;
 	auto y = 3186.5_km;
 	auto r = std::sqrt(x*x + y*y);
 
@@ -75,7 +75,7 @@ offset (e.g. Kelvin and Celsius).
 
 Since all the units are checked at compile time, functions that would result in
 runtime dependent unit changes such as `pow` are not available. Instead the
-library provides templated alternatives (e.g. `power`).
+library provides templated alternatives (e.g. `units::power`).
 
 Radians are a also bit of a weird one as a dimensionless unit. At the moment,
 the library mostly ignores angle units when performing unit checking. This means
